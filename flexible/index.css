@@ -1,0 +1,25 @@
+html {
+  font-size: 100px;
+}
+body {
+  margin: 0;
+}
+.wrap {
+  clear: both;
+}
+.panel {
+  float: left;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: skyblue;
+}
+.panel:nth-of-type(2) {
+  background-color: blueviolet;
+}
+.panel:nth-of-type(3) {
+  background-color: salmon;
+}
+.placeholder {
+  width: 3.5rem;
+  height: 1.5rem;
+}

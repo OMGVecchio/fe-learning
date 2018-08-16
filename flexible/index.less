@@ -1,0 +1,31 @@
+@baseDesign: 100;
+
+.px2rem(@n, @d) {
+  @{n}: @d / @baseDesign * 1rem;
+}
+
+html {
+  font-size: 100px;
+}
+body {
+  margin: 0;
+}
+.wrap {
+  clear: both;
+}
+.panel {
+  float: left;
+  .px2rem(width, 250);
+  .px2rem(height, 250);
+  background-color: skyblue;
+  &:nth-of-type(2) {
+    background-color: blueviolet;
+  }
+  &:nth-of-type(3) {
+    background-color: salmon;
+  }
+}
+.placeholder {
+  .px2rem(width, 355);
+  .px2rem(height, 150);
+}
