@@ -1,6 +1,8 @@
-# HTML
+# 基础
 
-## DOCTYP
+## HTML
+
+### DOCTYP
 
 `DOCTYP` 是一条指令，告诉浏览器通过哪一种文档类型解析文档，`DOCTYPE` 不存在或格式不正确会导致文档以兼容模式呈现。
 标准模式的排版和JS运作模式都是以该浏览器支持的最高标准运行；在兼容模式中，页面以宽松的向后兼容的方式显示,模拟老式浏览器的行为以防止站点无法工作。
@@ -20,11 +22,11 @@ IE=5、IE=7、IE=EmulateIE7、IE=8、IE=EmulateIE8、IE=9、IE=10、 IE=11、 IE
 
 `怪异模式` 见后续分析
 
-## link 和 @import
+### link 和 @import
 
 + `link` 属于 `XHTML` 标签，除了加载 `CSS` 外，还能用于定义 `RSS`, 定义 `rel` 连接属性等作用；而 `@import` 是 `CSS` 提供的，只能用于加载 `CSS`
 + 页面被加载的时，link会同时被加载，而 `@import` 引用的CSS会等到页面被加载完再加载
 + `@import`是 `CSS2.1` 提出的，只在 `IE5` 以上才能被识别，而 `link` 是 `XHTML` 标签，无兼容问题
 + `link` 支持使用 `js` 控制 `DOM` 去改变样式，而 `@import` 不支持
 
-### JS
+## JS
