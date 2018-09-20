@@ -30,3 +30,31 @@ IE=5、IE=7、IE=EmulateIE7、IE=8、IE=EmulateIE8、IE=9、IE=10、 IE=11、 IE
 + `link` 支持使用 `js` 控制 `DOM` 去改变样式，而 `@import` 不支持
 
 ## JS
+
+### 事件模型及事件代理
+
+### 跨域处理
+
+### parseQueryString
+
+### Number 类型
+
+> JavaScript 中 number 的实现遵循 IEEE 754 标准，使用 64 位固定长度来表示，也就是标准的 double 双精度浮点数。第 0 位：符号位，0 表示正数，1  表示负数；第 1 位到第 11 位：储存指数部分；第 12 位到第 63 位：储存小数部分
+
+> 十进制小数变为二进制：用2乘十进制小数，可以得到积，将积的整数部分取出，再用2乘余下的小数 部分，又得到一个积，再将积的整数部分取出，如此进行，直到积中的小数部分为零，或者达到所要求的精度为止。然后把取出的整数部分按顺序排列起来，先取的整数作为二进制小数的高位有效位，后取的整数作为低位有效位
+
+浮点数运算时的丢失问题： 部分浮点数在转化时会无限循环，导致最终生成不了预期的数据
+
+> 整型统一按浮点数处理，整数是按最大 54 位来算最大(2<sup>53</sup> - 1，Number.MAX_SAFE_INTEGER，9007199254740991) 和最小(-(2<sup>53</sup> - 1)，Number.MIN_SAFE_INTEGER，-9007199254740991) 安全整数范围的。所以只要超过这个范围，就会存在被舍去的精度问题
+
+Number.MAX_VALUE/Number.MAX_SAFE_INTEGER  TODO
+
+### microtask 和 macrotask
+
+> 宏任务：setTimeout, setInterval, setImmediate, I/O, UI rendering
+
+> 微任务：process.nextTick, Promises, Object.observe, MutationObserver
+
+microtask 先执行，JS 引擎线程和事件调度线程  TODO
+
+### Event Loop
