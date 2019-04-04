@@ -52,4 +52,16 @@ html {
   color: #fff;
   background-color: #35495e;
 }
+
+.block {
+  padding: 20px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+li {
+  margin-bottom: 10px;
+}
 </style>
