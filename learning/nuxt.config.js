@@ -34,6 +34,7 @@ export default {
   */
   plugins: [
     '~/plugins/const',
+    '~/plugins/components'
   ],
 
   /*

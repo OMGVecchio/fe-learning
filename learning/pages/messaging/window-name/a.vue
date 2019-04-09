@@ -1,8 +1,10 @@
 <template>
-  <div class="block">
-    value in b.vue is：{{ result || 'waiting' }}
-    <iframe :src="url" width="0" height="0" ref="frame" />
-  </div>
+  <page-layout>
+    <div class="block">
+      value in b.vue is：{{ result || 'waiting' }}
+      <iframe :src="url" width="0" height="0" ref="frame" />
+    </div>
+  </page-layout>
 </template>
 
 <script>
@@ -18,12 +20,12 @@ export default {
     const CrossDomain = this.$crossDomain
     const iframe = this.$refs.frame
     let hasDone = false
-    this.url = `${CrossDomain}/messaging/iframe-name/b`
+    this.url = `${CrossDomain}/messaging/window-name/b`
     iframe.addEventListener('load', () => {
       if (hasDone) {
         this.result = iframe.contentWindow.name
       } else {
-        this.url = `${origin}/messaging/iframe-name/c`
+        this.url = `${origin}/messaging/window-name/c`
         hasDone = true
       }
     })

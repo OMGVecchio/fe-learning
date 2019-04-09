@@ -1,21 +1,23 @@
 <template>
-  <div>
+  <page-layout>
     <div class="block">
-      <p>
-        <input type="text" v-model="msg" />
-        <button @click="sendMsg">发送</button>
-      </p>
-      <p>
-        // 第一的值是 nuxt 手动触发的 postMessage 么？
-      </p>
-      <p>
-        从 iframe 来的信息是：{{ receiveMsg || '暂无' }}
-      </p>
+      <div class="block">
+        <p>
+          <input type="text" v-model="msg" />
+          <button @click="sendMsg">发送</button>
+        </p>
+        <p>
+          // 第一的值是 nuxt 手动触发的 postMessage 么？
+        </p>
+        <p>
+          从 iframe 来的信息是：{{ receiveMsg || '暂无' }}
+        </p>
+      </div>
+      <div class="block">
+        <iframe :src="frameUrl" ref="frame" />
+      </div>
     </div>
-    <div class="block">
-      <iframe :src="frameUrl" ref="frame" />
-    </div>
-  </div>
+  </page-layout>
 </template>
 
 <script>
@@ -24,7 +26,6 @@ export default {
     return {
       msg: '',
       receiveMsg: '',
-      // frameUrl: `/messaging/cross-document-messaging/b`
       frameUrl: `${this.$crossDomain}/messaging/cross-document-messaging/b`
     }
   },

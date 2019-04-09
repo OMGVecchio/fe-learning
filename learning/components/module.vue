@@ -1,0 +1,24 @@
+<template>
+  <div class="module-demo block">
+    <nuxt-link :to="upUrlPath">
+      返回上一级
+    </nuxt-link>
+    <slot />
+  </div>
+</template>
+
+<script>
+export default {
+  computed: {
+    upUrlPath() {
+      const pathArr = window.location.pathname.split('/')
+      pathArr.pop()
+      return pathArr.join('/') || '/'
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>

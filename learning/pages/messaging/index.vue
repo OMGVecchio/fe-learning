@@ -1,28 +1,34 @@
 <template>
-  <div class="block">
-    <ul>
-      <li v-for="item in messageTypes" :key="item.title">
-        <a :href="item.url">
-          {{ item.title }}
-        </a>
-      </li>
-    </ul>
-  </div>
+  <module-layout>
+    <div class="block">
+      <ul>
+        <li v-for="item in messageTypes" :key="item.title">
+          <nuxt-link :to="item.url">
+            {{ item.title }}
+          </nuxt-link>
+        </li>
+      </ul>
+    </div>
+  </module-layout>
 </template>
 
 <script>
 export default {
   data() {
+    const mainHref = '/messaging'
     return {
       messageTypes: [{
         title: '信道通信',
-        url: '/messaging/channel-messaging/a'
+        url: `${mainHref}/channel-messaging/a`
       }, {
         title: '跨文档通信',
-        url: '/messaging/cross-document-messaging/a'
+        url: `${mainHref}/cross-document-messaging/a`
       }, {
         title: 'window-name',
-        url: '/messaging/iframe-name/a'
+        url: `${mainHref}/window-name/a`
+      }, {
+        title: 'iframe-hash',
+        url: `${mainHref}/iframe-hash/a`
       }]
     }
   }

@@ -1,8 +1,10 @@
 <template>
-  <div class="block">
-    <iframe :src="bUrl" ref="b" />
-    <iframe :src="cUrl" ref="c" />
-  </div>
+  <page-layout>
+    <div class="block">
+      <iframe :src="bUrl" ref="b" />
+      <iframe :src="cUrl" ref="c" />
+    </div>
+  </page-layout>
 </template>
 
 <script>
@@ -11,8 +13,6 @@ export default {
     return {
       bUrl: `${this.$crossDomain}/messaging/channel-messaging/b`,
       cUrl: `${this.$crossDomain}/messaging/channel-messaging/c`
-      // bUrl: `/messaging/channel-messaging/b`,
-      // cUrl: `/messaging/channel-messaging/c`
     }
   },
   mounted() {
@@ -23,12 +23,6 @@ export default {
       f0.postMessage('initPort', '*', [mc.port1])
       f1.postMessage('initPort', '*', [mc.port2])
     })
-    // f0.addEventListener('load', () => {
-    //   f0.postMessage('initPort', '*', [mc.port1])
-    // })
-    // f1.addEventListener('load', () => {
-    //   f1.postMessage('initPort', '*', [mc.port2])
-    // })
   }
 }
 </script>
