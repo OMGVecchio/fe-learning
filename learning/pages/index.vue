@@ -17,6 +17,9 @@ export default {
       modules: [{
         title: 'iframe 跨主域',
         href: '/messaging'
+      }, {
+        title: 'webRTC',
+        href: '/webrtc'
       }]
     }
   }
