@@ -15,7 +15,8 @@
 <script>
 export default {
   data() {
-    const originUrl = 'http://zhitou.dev.zbjdev.com/messaging/iframe-hash/c'
+    const host = document.referrer.match(/(?<=\/\/)(\w|\.)*(?=\/)/)[0]
+    const originUrl = `http://${host}/messaging/iframe-hash/c`
     return {
       hash: '',
       msg: '',
