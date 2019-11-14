@@ -20,7 +20,15 @@ export default {
       }, {
         title: 'webRTC',
         href: '/webrtc'
-      }]
+      }, {
+        title: 'call/apply/bind',
+        href: '/context-change'
+      }
+      // {
+      //   title: 'miniVue',
+      //   href: '/minivue'
+      // }
+      ]
     }
   }
 }

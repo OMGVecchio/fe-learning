@@ -88,9 +88,8 @@ Monkey.prototype = new Animal()
 function Monkey(name) {
   Animal.call(this, name)
 }
-const Super = function() {}
-Super.prototype = Animal.prototype
-Monkey.prototype = new Super()
+Monkey.prototype = Object.create(Animal.prototype)
+Monkey.prototype.constructor = Monkey
 ```
 
 通过寄生方式，砍掉父类的实例属性

@@ -55,6 +55,4 @@ Number.MAX_VALUE/Number.MAX_SAFE_INTEGER  TODO
 
 > 微任务：process.nextTick, Promises, Object.observe, MutationObserver
 
-microtask 先执行，JS 引擎线程和事件调度线程  TODO
-
 ### Event Loop
