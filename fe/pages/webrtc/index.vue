@@ -1,45 +1,50 @@
 <template>
   <module-layout>
     <div class="block">
-      <div class="content">
-        <div class="basic">
-          <audio id="audio" autoplay></audio>
-          <video id="video" width="200" height="200" autoplay></video>
-          <canvas id="canvas" width="200" height="200"></canvas>
-          <div id="colorpicker"></div>
-        </div>
-      <div class="clear main">
-        <div class="fl capture">
+      <div>
+        <audio autoplay ref="audio" />
+        <video :width="width" :height="height" autoplay ref="video" />
+        <canvas
+          :width="width"
+          :height="height"
+          @mousemove="pickRGB"
+          ref="canvas"
+        />
+        <div id="colorpicker" :style="{ backgroundColor: rgba }">{{ rgba }}</div>
+      </div>
+      <div class="clear">
+        <div class="fl">
           <p>
-            <button class="capture-btn">capture</button>
+            <button @click="capture">capture</button>
           </p>
-          <img class="capture-img"/>
+          <img :src="captureImage" class="canvas-image"/>
         </div>
-        <div class="fl invert">
+        <div class="fl">
           <p>
-            <button class="invert-btn">invert</button>
+            <button @click="captureInvert">invert</button>
           </p>
-          <img class="invert-img">
+          <img :src="invertImage" class="canvas-image">
         </div>
-        <div class="fl grayscale">
+        <div class="fl">
           <p>
-            <button class="grayscale-btn">grayscale</button>
+            <button @click="captureGrayscale">grayscale</button>
           </p>
-          <img class="grayscale-img">
+          <img :src="grayscaleImage" class="canvas-image">
         </div>
-        <div class="fl record">
+        <div class="fl">
           <p>
-            <button class="record-btn1">record start</button>
-            <button class="record-btn2">record stop</button>
+            <button class="record-btn1" @click="startRecord">record start</button>
+            <button class="record-btn2" @click="stopRecord">record stop</button>
           </p>
-          <video class="record-video" width="200" height="200" autoplay loop></video>
+          <video
+            class="record-video"
+            :width="this.width"
+            :height="this.height"
+            :src="recordStream"
+            autoplay
+            loop
+          />
         </div>
-          </div>
-          <!-- <div class="transform">
-              <canvas id="canvas" width="200" height="200"></canvas>
-              <canvas id="canvas" width="200" height="200"></canvas>
-          </div> -->
-          <!-- <img id="image1" width="200" height="200" /> -->
       </div>
     </div>
   </module-layout>
@@ -47,126 +52,116 @@
 
 <script>
 export default {
-  mounted() {
-    // TODO 改成 vue 魔术
-    const audio = document.querySelector('#audio')
-    const video = document.querySelector('#video')
-    const canvas = document.querySelector('#canvas')
-    const ctx = canvas.getContext('2d')
-    const width = canvas.width
-    const height = canvas.height
-
-    let record;
-    let chunks = [];
-
-    navigator.webkitGetUserMedia({
-      video: true,
-      // audio: true
-    }, (stream1, stream2) => {
-      initRecord(stream1)
-      video.srcObject = stream1
-      audio.srcObject = stream2
-    }, (err) => {
-      console.log(err)
-    })
-
-    // canvas 动画 video stream
-    const draw = () => {
-      ctx.drawImage(video, 0, 0, 200, 200)
-      requestAnimationFrame(draw)
+  record: null,
+  audioStream: null,
+  data() {
+    return {
+      width: 200,
+      height: 200,
+      captureImage: null,
+      invertImage: null,
+      grayscaleImage: null,
+      rgba: "rgba(255,255,255,1)",
+      recordStream: null
     }
-    draw()
-
-    // 摄像
-    !function() {
-      const image = document.querySelector('.capture-img')
-      const btn = document.querySelector('.capture-btn')
-      btn.addEventListener('click', (e) => {
-        image.src = canvas.toDataURL()
-      })
-    }()
-
+  },
+  methods: {
+    initCanvas() {
+      const { canvas } = this.$refs
+      const ctx = canvas.getContext('2d')
+      // canvas 动画 video stream
+      const draw = () => {
+        ctx.drawImage(this.$refs.video, 0, 0, 200, 200)
+        requestAnimationFrame(draw)
+      }
+      draw()
+    },
+    // 纯拍照
+    capture() {
+      this.captureImage = this.$refs.canvas.toDataURL()
+    },
     // 可以用 css filter，在 video 元素上直接实现过滤效果
     // example：filter: blur(3px);filter: grayscale(1);filter: invert(1);filter: sepia(1);
     // 图片 invert 转换
-    !function() {
-      const image = document.querySelector('.invert-img')
-      const btn = document.querySelector('.invert-btn')
-      btn.addEventListener('click', () => {
-        const imageData = ctx.getImageData(0, 0, width, height)
-        let data = imageData.data;
-        for (var i = 0; i < data.length; i += 4) {
-          data[i]     = 225 - data[i];     // red
-          data[i + 1] = 225 - data[i + 1]; // green
-          data[i + 2] = 225 - data[i + 2]; // blue
-        }
-        ctx.putImageData(imageData, 0, 0)
-        image.src = canvas.toDataURL()
-      })
-    }()
-
-    // 图片 grayscale 转换
-    !function() {
-      const image = document.querySelector('.grayscale-img')
-      const btn = document.querySelector('.grayscale-btn')
-      btn.addEventListener('click', () => {
-        const imageData = ctx.getImageData(0, 0, width, height)
-        let data = imageData.data;
-        for (var i = 0; i < data.length; i += 4) {
-          var avg = (data[i] + data[i +1] + data[i +2]) / 3;
-          data[i]     = avg; // red
-          data[i + 1] = avg; // green
-          data[i + 2] = avg; // blue
-        }
-        ctx.putImageData(imageData, 0, 0)
-        image.src = canvas.toDataURL()
-      })
-    }()
-
-    // 像素取色
-    !function() {
-      const cp = document.querySelector('#colorpicker')
-      const pick = (e) => {
-        const x = e.layerX
-        const y = e.layerY
-        const pixel = ctx.getImageData(x, y, 1, 1)
-        const data = pixel.data
-        const rgba = 'rgba(' + data[0] + ',' + data[1] + ',' + data[2] + ',' + (data[3] / 255) + ')'
-        cp.style.background = rgba
-        cp.textContent = rgba
+    captureInvert() {
+      const { canvas } = this.$refs
+      const ctx = canvas.getContext('2d')
+      const imageData = ctx.getImageData(0, 0, this.width, this.height)
+      const { data } = imageData
+      for (let i = 0; i < data.length; i += 4) {
+        data[i]     = 225 - data[i]     // red
+        data[i + 1] = 225 - data[i + 1] // green
+        data[i + 2] = 225 - data[i + 2] // blue
       }
-      canvas.addEventListener('mousemove', pick)
-    }()
-
-    // 录像
-    !function() {
-      const btnStart = document.querySelector('.record-btn1')
-      const btnStop  = document.querySelector('.record-btn2')
-      btnStart.addEventListener('click', () => {
-        if (record.state === 'recording') {
-          return
-        }
-        record.start()
-      })
-      btnStop.addEventListener('click', () => {
-        if (record.state === 'inactive') {
-          return
-        }
-        record.stop()
-      })
-    }()
-    function initRecord(stream) {
-      const video = document.querySelector('.record-video')
-      record = new MediaRecorder(stream)
-      // stop 后触发
-      record.ondataavailable = (e) => {
+      ctx.putImageData(imageData, 0, 0)
+      this.invertImage = canvas.toDataURL()
+    },
+    // grayscale
+    captureGrayscale() {
+      const { canvas } = this.$refs
+      const ctx = canvas.getContext('2d')
+      const imageData = ctx.getImageData(0, 0, this.width, this.height)
+      const { data } = imageData;
+      for (let i = 0; i < data.length; i += 4) {
+        const avg = (data[i] + data[i +1] + data[i +2]) / 3;
+        data[i]     = avg; // red
+        data[i + 1] = avg; // green
+        data[i + 2] = avg; // blue
+      }
+      ctx.putImageData(imageData, 0, 0)
+      this.grayscaleImage = canvas.toDataURL()
+    },
+    // 选择 RGBA
+    pickRGB(e) {
+      const { canvas } = this.$refs
+      const ctx = canvas.getContext('2d')
+      const x = e.layerX
+      const y = e.layerY
+      const pixel = ctx.getImageData(x, y, 1, 1)
+      const data = pixel.data
+      const rgba = 'rgba(' + data[0] + ',' + data[1] + ',' + data[2] + ',' + (data[3] / 255) + ')'
+      this.rgba = rgba
+    },
+    // 录像初始化
+    initRecord() {
+      let chunks = []
+      this.$options.record = new MediaRecorder(this.$options.audioStream)
+      const { record } = this.$options
+      record.ondataavailable = e => {
         chunks.push(e.data)
       }
       record.onstop = () => {
         const blob = new Blob(chunks)
-        video.src = URL.createObjectURL(blob)
+        this.recordStream = URL.createObjectURL(blob)
       }
+    },
+    // 录像开始
+    startRecord() {
+      this.initRecord()
+      const { record } = this.$options
+      if (record.state === 'recording') {
+        return
+      }
+      record.start()
+    },
+    // 录像结束
+    stopRecord() {
+      const { record } = this.$options
+      if (record.state === 'inactive') {
+        return
+      }
+      record.stop()
     }
+  },
+  mounted() {
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      // audio: true
+    }).then((stream1, stream2) => {
+      this.$options.audioStream = stream1
+      this.$refs.video.srcObject = stream1
+      this.$refs.audio.srcObject = stream2
+    }).then(this.initCanvas)
   },
 }
 </script>
@@ -177,5 +172,9 @@ export default {
 }
 .clear {
   clear: both;
+}
+.canvas-image {
+  width: 200px;
+  height: 200px;
 }
 </style>
