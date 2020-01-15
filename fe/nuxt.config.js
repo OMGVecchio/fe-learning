@@ -1,7 +1,10 @@
-import pkg from './package'
+const pkg = require('../package')
 
-export default {
+const config = {
+  // spa：没有服务器端渲染；universal：同构应用程序
   mode: 'spa',
+  dev: true,
+  srcDir: __dirname,
 
   /*
   ** Headers of the page
@@ -63,3 +66,5 @@ export default {
     }
   }
 }
+
+module.exports = config

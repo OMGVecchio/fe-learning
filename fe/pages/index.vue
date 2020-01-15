@@ -15,20 +15,24 @@ export default {
   data() {
     return {
       modules: [{
-        title: 'iframe 跨主域',
+        title: 'iframe cross-domain',
         href: '/messaging'
-      }, {
-        title: 'webRTC',
-        href: '/webrtc'
       }, {
         title: 'call/apply/bind',
         href: '/context-change'
-      }
-      // {
-      //   title: 'miniVue',
-      //   href: '/minivue'
-      // }
-      ]
+      }, {
+        title: 'Promise2',
+        href: '/promise'
+      }, {
+        title: 'flexible',
+        href: '/flexible'
+      }, {
+        title: 'WebGL',
+        href: '/webgl'
+      }, {
+        title: 'WebRTC',
+        href: '/webrtc'
+      }]
     }
   }
 }
