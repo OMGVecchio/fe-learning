@@ -20,5 +20,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+a {
+  font-size: 20px;
+}
 </style>
