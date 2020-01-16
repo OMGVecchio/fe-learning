@@ -27,6 +27,9 @@ export default {
         title: 'flexible',
         href: '/flexible'
       }, {
+        title: 'media',
+        href: '/media'
+      }, {
         title: 'WebGL',
         href: '/webgl'
       }, {
