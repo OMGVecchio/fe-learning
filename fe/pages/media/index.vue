@@ -1,37 +1,61 @@
 <template>
   <module-layout>
     <div class="block">
-      <div>
-        <audio ref="audio" autoplay />
-        <video ref="video" :width="width" :height="height" autoplay controls />
-        <canvas
-          ref="canvas"
-          :width="width"
-          :height="height"
-          @mousemove="pickRGB"
-        />
-        <div id="colorpicker" :style="{ backgroundColor: rgba }">{{ rgba }}</div>
+      <div class="common-wrap">
+        <div>
+          <audio ref="audio" autoplay />
+          <p>原始音视频</p>
+          <video
+            ref="video"
+            :width="width"
+            :height="height"
+            autoplay
+            controls
+          />
+        </div>
+        <div>
+          <p>原始视频按帧绘制在 canvas</p>
+          <canvas
+            ref="canvas"
+            :width="width"
+            :height="height"
+            @mousemove="pickRGB"
+          />
+        </div>
+        <div>
+          <p>canvas captureStream 的 video</p>
+          <video
+            ref="canvasVideo"
+            :width="width"
+            :height="height"
+            autoplay
+            controls
+          />
+        </div>
       </div>
-      <div class="clear">
-        <div class="fl">
+      <p class="color-picker" :style="{ backgroundColor: rgba }">
+        取 canvas 的色值：{{ rgba }}
+      </p>
+      <div class="common-wrap">
+        <div>
           <p>
             <button @click="capture">Capture</button>
           </p>
           <img :src="captureImage" class="canvas-image"/>
         </div>
-        <div class="fl">
+        <div>
           <p>
             <button @click="captureInvert">Invert</button>
           </p>
           <img :src="invertImage" class="canvas-image">
         </div>
-        <div class="fl">
+        <div>
           <p>
             <button @click="captureGrayscale">Grayscale</button>
           </p>
           <img :src="grayscaleImage" class="canvas-image">
         </div>
-        <div class="fl">
+        <div>
           <p>
             <button @click="screenRecord">Screen Record Start</button>
             <button @click="captureRecord">Record Start</button>
@@ -77,9 +101,15 @@ export default {
       ctx.drawImage(this.$refs.video, 0, 0, 200, 200)
       this.$options.drawRAFId = requestAnimationFrame(this.drawCanvas)
     },
+    setCanvasCaptureStream() {
+      const { canvasVideo, canvas  } = this.$refs
+      canvasVideo.srcObject = canvas.captureStream()
+    },
     initCanvas() {
       this.drawCanvas()
+      this.setCanvasCaptureStream()
     },
+
     // 纯拍照
     capture() {
       this.captureImage = this.$refs.canvas.toDataURL()
@@ -115,6 +145,7 @@ export default {
       ctx.putImageData(imageData, 0, 0)
       this.grayscaleImage = canvas.toDataURL()
     },
+
     // 选择 RGBA
     pickRGB(e) {
       const { canvas } = this.$refs
@@ -126,6 +157,7 @@ export default {
       const rgba = 'rgba(' + data[0] + ',' + data[1] + ',' + data[2] + ',' + (data[3] / 255) + ')'
       this.rgba = rgba
     },
+
     // 录像初始化
     initRecord(stream) {
       let chunks = []
@@ -175,11 +207,13 @@ export default {
     cancelAnimationFrame(this.$options.drawRAFId)
     // 手动关闭视频流，否则摄像头会一直处于打开状态
     const { videoStream } = this.$options
-    if (!videoStream) return
-    videoStream.getTracks().forEach(stream => stream.stop())
+    if (videoStream) {
+      videoStream.getTracks().forEach(stream => stream.stop())
+    }
     // 释放 BLOB 资源，结束对 MediaSource 对象的引用，使其在 GC 时被回收
-    if (!this.recordStream) return
-    URL.revokeObjectURL(this.recordStream)
+    if (this.recordStream) {
+      URL.revokeObjectURL(this.recordStream)
+    }
   },
   mounted() {
     const constraint = {
@@ -221,20 +255,26 @@ export default {
       // 进入页面，promise 还没执行完就已经又退出页面，导致此时的 video 可能为 undefined
       this.$refs.video && (this.$refs.video.srcObject = videoStream)
       // this.$refs.audio && (this.$refs.audio.srcObject = audioStream)
-    }).then(this.initCanvas)
+    })
+    this.initCanvas()
   },
 }
 </script>
 
-<style style="less" scoped>
-.fl {
-  float: left;
-}
-.clear {
-  clear: both;
-}
+<style scoped>
 .canvas-image {
   width: 200px;
   height: 200px;
+}
+.common-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.color-picker {
+  line-height: 30px;
+  text-align: center;
 }
 </style>
