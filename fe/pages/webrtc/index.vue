@@ -52,8 +52,9 @@
 
 <script>
 export default {
-  record: null,
-  audioStream: null,
+  drawRAFId: null, // drawCanvas 里 requestAnimationFrame 返回的 ID
+  record: null, // 录像 MediaRecorder 的实例
+  videoStream: null, // 录像 MediaRecorder 的实例所需的媒体流参数
   data() {
     return {
       width: 200,
@@ -66,15 +67,15 @@ export default {
     }
   },
   methods: {
-    initCanvas() {
+    drawCanvas() {
       const { canvas } = this.$refs
+      if (!canvas) return
       const ctx = canvas.getContext('2d')
-      // canvas 动画 video stream
-      const draw = () => {
-        ctx.drawImage(this.$refs.video, 0, 0, 200, 200)
-        requestAnimationFrame(draw)
-      }
-      draw()
+      ctx.drawImage(this.$refs.video, 0, 0, 200, 200)
+      this.$options.drawRAFId = requestAnimationFrame(this.drawCanvas)
+    },
+    initCanvas() {
+      this.drawCanvas()
     },
     // 纯拍照
     capture() {
@@ -101,12 +102,12 @@ export default {
       const { canvas } = this.$refs
       const ctx = canvas.getContext('2d')
       const imageData = ctx.getImageData(0, 0, this.width, this.height)
-      const { data } = imageData;
+      const { data } = imageData
       for (let i = 0; i < data.length; i += 4) {
-        const avg = (data[i] + data[i +1] + data[i +2]) / 3;
-        data[i]     = avg; // red
-        data[i + 1] = avg; // green
-        data[i + 2] = avg; // blue
+        const avg = (data[i] + data[i +1] + data[i +2]) / 3
+        data[i]     = avg // red
+        data[i + 1] = avg // green
+        data[i + 2] = avg // blue
       }
       ctx.putImageData(imageData, 0, 0)
       this.grayscaleImage = canvas.toDataURL()
@@ -125,7 +126,7 @@ export default {
     // 录像初始化
     initRecord() {
       let chunks = []
-      this.$options.record = new MediaRecorder(this.$options.audioStream)
+      this.$options.record = new MediaRecorder(this.$options.videoStream)
       const { record } = this.$options
       record.ondataavailable = e => {
         chunks.push(e.data)
@@ -153,14 +154,22 @@ export default {
       record.stop()
     }
   },
+  destroyed() {
+    cancelAnimationFrame(this.$options.drawRAFId)
+    // 手动关闭视频流，否则摄像头会一直处于打开状态
+    const { videoStream } = this.$options
+    if (!videoStream) return
+    videoStream.getTracks().forEach(stream => stream.stop())
+  },
   mounted() {
     navigator.mediaDevices.getUserMedia({
       video: true,
       // audio: true
-    }).then((stream1, stream2) => {
-      this.$options.audioStream = stream1
-      this.$refs.video.srcObject = stream1
-      this.$refs.audio.srcObject = stream2
+    }).then((videoStream, audioStream) => {
+      this.$options.videoStream = videoStream
+      // 进入页面，promise 还没执行完就已经又退出页面，导致此时的 video 可能为 undefined
+      this.$refs.video && (this.$refs.video.srcObject = videoStream)
+      // this.$refs.audio && (this.$refs.audio.srcObject = audioStream)
     }).then(this.initCanvas)
   },
 }
