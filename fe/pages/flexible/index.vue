@@ -1,5 +1,5 @@
 <template>
-  <module-layout>
+  <page-layout>
     <div class="block">
       <div class="wrap">
         <div class="panel"></div>
@@ -8,7 +8,7 @@
       </div>
       <img :src="$getImage(355, 150)" alt="占位符" class="placeholder">
     </div>
-  </module-layout>
+  </page-layout>
 </template>
 
 <script>

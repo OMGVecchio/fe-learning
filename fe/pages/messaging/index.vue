@@ -1,5 +1,5 @@
 <template>
-  <module-layout>
+  <page-layout>
     <div class="block">
       <ul>
         <li v-for="item in messageTypes" :key="item.title">
@@ -9,7 +9,7 @@
         </li>
       </ul>
     </div>
-  </module-layout>
+  </page-layout>
 </template>
 
 <script>

@@ -1,9 +1,9 @@
 <template>
-  <module-layout>
+  <page-layout>
     <div class="block">
       打开控制台 window.Promise2
     </div>
-  </module-layout>
+  </page-layout>
 </template>
 
 <script>

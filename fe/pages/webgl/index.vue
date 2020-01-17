@@ -1,10 +1,10 @@
 <template>
-  <module-layout>
+  <page-layout>
     <div>
       TODO WebGL
       <canvas id="canvas" />
     </div>
-  </module-layout>
+  </page-layout>
 </template>
 
 <script>

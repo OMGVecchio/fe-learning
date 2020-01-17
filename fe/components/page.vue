@@ -9,11 +9,21 @@
 
 <script>
 export default {
+  props: {
+    back: {
+      type: Number,
+      default: 1
+    }
+  },
   computed: {
     upUrlPath() {
-      const pathArr = window.location.pathname.split('/')
-      pathArr.pop()
-      pathArr.pop()
+      const pathArr = location.pathname.split('/')
+      let count = this.back
+      while (count > 0) {
+        pathArr.pop()
+        count--
+      }
+      if (pathArr.length === 1) return '/'
       return pathArr.join('/')
     }
   }

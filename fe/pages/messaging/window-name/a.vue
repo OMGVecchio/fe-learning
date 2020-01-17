@@ -1,5 +1,5 @@
 <template>
-  <page-layout>
+  <page-layout :back="2">
     <div class="block">
       value in b.vue is：{{ result || 'waiting' }}
       <iframe :src="url" width="0" height="0" ref="frame" />

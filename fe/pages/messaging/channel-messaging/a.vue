@@ -1,5 +1,5 @@
 <template>
-  <page-layout>
+  <page-layout :back="2">
     <div class="block">
       <iframe :src="bUrl" ref="b" />
       <iframe :src="cUrl" ref="c" />

@@ -19,7 +19,7 @@ export default {
         href: '/messaging'
       }, {
         title: 'call/apply/bind',
-        href: '/context-change'
+        href: '/context'
       }, {
         title: 'Promise2',
         href: '/promise'

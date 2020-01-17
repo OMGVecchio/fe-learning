@@ -1,5 +1,5 @@
 <template>
-  <module-layout>
+  <page-layout>
     <div class="block">
       <div class="common-wrap">
         <div>
@@ -74,7 +74,7 @@
         </div>
       </div>
     </div>
-  </module-layout>
+  </page-layout>
 </template>
 
 <script>

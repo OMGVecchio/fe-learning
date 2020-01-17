@@ -1,5 +1,5 @@
 <template>
-  <module-layout>
+  <page-layout>
     <div class="block">
       <button @click="checkCall">check ownCall</button>
       <button @click="checkApply">check ownApply</button>
@@ -8,7 +8,7 @@
     <p>result1: {{ result1 }}</p>
     <p>result2: {{ result2 }}</p>
     <p>result3: {{ result3 }}</p>
-  </module-layout>
+  </page-layout>
 </template>
 
 <script>

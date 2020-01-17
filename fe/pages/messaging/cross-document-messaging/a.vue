@@ -1,5 +1,5 @@
 <template>
-  <page-layout>
+  <page-layout :back="2">
     <div class="block">
       <div class="block">
         <p>

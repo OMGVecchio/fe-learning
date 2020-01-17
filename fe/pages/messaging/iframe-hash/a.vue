@@ -1,5 +1,5 @@
 <template>
-  <page-layout>
+  <page-layout :back="2">
     <div class="block">
       <p>
         从 b 收到的消息是：{{ decodeURIComponent(msg) || '暂无' }}

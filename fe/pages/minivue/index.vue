@@ -1,5 +1,5 @@
 <template>
-  <module-layout>
+  <page-layout>
     <div class="block">
       <div id="sub-root">
         <p>呵呵</p>
@@ -7,7 +7,7 @@
         <span>哇哇</span>
       </div>
     </div>
-  </module-layout>
+  </page-layout>
 </template>
 
 <script>
